@@ -1,5 +1,16 @@
 *.class
 
+# sbt specific
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Android
+android/local.properties
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
