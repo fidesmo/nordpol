@@ -10,7 +10,7 @@ Communicating with NFC devices using Android can sometimes be a bit challenging.
 
 To include the project into your gradle android build:
 ```
-retpositories {
+repositories {
     ...
     maven {
         url 'http://releases.marmeladburk.fidesmo.com'
