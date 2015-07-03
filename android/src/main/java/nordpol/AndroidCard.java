@@ -1,6 +1,8 @@
 package nordpol.android;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
@@ -65,5 +67,13 @@ public class AndroidCard implements IsoCard {
 
     public byte[] transceive(byte [] command) throws IOException {
         return card.transceive(command);
+    }
+
+    public List<byte[]> transceive(List<byte[]> commands) throws IOException {
+        ArrayList<byte[]> responses = new ArrayList<byte[]>();
+        for(byte[] command: commands) {
+            responses.add(transceive(command));
+        }
+        return responses;
     }
 }
