@@ -8,8 +8,19 @@ Communicating with NFC devices using Android can sometimes be a bit challenging.
 
 ## Usage
 
-TBD
-
+To include the project into your gradle android build:
+```
+retpositories {
+    ...
+    maven {
+        url 'http://releases.marmeladburk.fidesmo.com'
+    }
+}
+dependencies {
+    ...
+    compile group: 'com.fidesmo', name: 'nordpol-android', version: '0.1.0', ext: 'aar', transitive: true
+}
+```
 ## API
 
 TBD
