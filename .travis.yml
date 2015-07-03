@@ -1,0 +1,24 @@
+language: android
+android:
+  components:
+    # The BuildTools version used by your project
+    - build-tools-22.0.1
+
+    # The SDK version used to compile your project
+    - android-22
+jdk:
+  - openjdk7
+before_install:
+  - echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq -y --force-yes sbt
+script: sbt compile test
+notifications:
+  email: false
+env:
+  global:
+  - secure: "tDpO2waJP4lIsgp86FAt+jDXa8fixNEqk2iNZHJVYIuzHbY/t1zzII5wuz2csyw2x0ErmoQn0+MIoBsMTHlGuu+vK+0BXbqxvd/4Qbcn3B9yUV6RULiN/hZc7St5bazbEiDNfSJPU+XoGiKkl5qCL+2ehfK0z3vMplwBkYgYboXzZRwWksI1+rbxKYa6jZPkpTJb9UUJNiU12jTb7aHkyRmOAjEuz4DoFEnMyulIsDhNOJOb8KGer4IH5VHtRUtDGWsw33Ou7bxySzNj+1REth7nQ7FY+uBuGJK15GM4zaTBAzDM9KdHZzLH2WC2CMjad7zdSsYTR18NyWTHtgC+d49NWeyPwxs5bqbxlsgBghzq/fV/DhUdILXgEWV+BsqWdsVOInywoHpA00pjsvmrR7AsINeIzYHM1nHQPZcPcJFWMZ8lJT2DsFKncSgm7rQciA6zjx7XuMcPs2QPAS/yqRym8ohm6K8DO31eGWOxl0Lr1dNts0bFB+f+W9586uxFidmUO6u+l9XT93pwBWwSYFI+e85BnK/1dmmHGeZH+2Z3WHjyXgYGhSYuBzqyJFc3UjqRSpD9fK2RTn2LC1QH/AQoJnz3Eh2/EwVWgL0co/SYJy64GGFsbWIQTxW3HSlOgVILvz4ML4oyFTZD36i20+xEZ+tn1ohfRVuXGO4xUYQ="
+  - secure: "Uf1j1nQzrDcM3dM1raV8YoopKl8uk5LMtZakVB/zOznWXw01N2lQIln1EY0vVTLVScrjxItmOAvSUPHyc8Y6zuUDWZ/iJmpDZC61rIbSHokEwQoCXqo74qi95rMxznTI/aRQLzKY+YwCWvkKu796ux9C+oiC4jdfGEL9dF3IK7D4Z/S+QRGr6kN9x5pSlxoz3AYmzYL0d+/spB+iX6SPSgNGAxRyRTQVzG/4GBbmIUoUI4EZbkZAuh0WT6IUKrokNkMkJoNUOEOkov+1SVD37NJ1HhDmqx966sUvD56GY6FLe/YsoR7x2CmKUBn3xTZW1oDU3kwQdLKU7gY0kFKcTyyIl5z9eq6/6uH8M8AjXRIB9pYK3Rtzh2kmJdnIbQvtDACWzAPzFoeKIZivL76C4jYAXdvIT0llyyEEpb/SPjEYqhHGd8cBw3iv2mnPzd3kFtD0FXVfEVx0HzotdBFcXSt2ZKR7ruh3BE7RJeJNOMSljicOqaF6YYQU1juomvfbX5mpOGBiLA9BhP27bjD3BdhI0th+PppwT/nDxWVYlUhbx+VISBudcR+Rv6R6zs97kqYRGmnffEpSumcSqEcEzCs47F7rabfFdKZp7Z6P85UYnz7cPtrz4JuNB1jWKt+hAJbLPqNtJS/33ArY5vYqvx8gYNbfGRAK+OdiJ131kjA="
+after_success:
+- ! '[[ $TRAVIS_BRANCH =~ ^(v[0-9]+\.[0-9]+\.[0-9]+|master)$ && $TRAVIS_PULL_REQUEST
+  = false ]] && sbt publish'
