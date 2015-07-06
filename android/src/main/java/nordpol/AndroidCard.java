@@ -3,17 +3,20 @@ package nordpol.android;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
-
+import java.util.concurrent.CopyOnWriteArrayList;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 
 import nordpol.IsoCard;
+import nordpol.CardErrorListener;
 
 public class AndroidCard implements IsoCard {
     private static final int DEFAULT_TIMEOUT = 15000;
     private static final int SAMSUNG_S5_MINI_MAX = 253;
 
-    protected IsoDep card;
+    private IsoDep card;
+    private List<CardErrorListener> errorListeners =
+        new CopyOnWriteArrayList<CardErrorListener>();
 
     private AndroidCard(IsoDep card) {
         this.card = card;
@@ -37,13 +40,32 @@ public class AndroidCard implements IsoCard {
         }
     }
 
+    private void notifyListeners(IOException exception) {
+        for(CardErrorListener listener: errorListeners) {
+            listener.error(this, exception);
+        }
+    }
+
+    public void addCardErrorListener(CardErrorListener listener) {
+        errorListeners.add(listener);
+    }
+
+    public void removeCardErrorListener(CardErrorListener listener) {
+        errorListeners.remove(listener);
+    }
+
     public boolean isConnected() {
         return card.isConnected();
     }
 
     public void connect() throws IOException {
-        card.connect();
-        card.setTimeout(DEFAULT_TIMEOUT);
+        try {
+            card.connect();
+            card.setTimeout(DEFAULT_TIMEOUT);
+        } catch(IOException e) {
+            notifyListeners(e);
+            throw e;
+        }
     }
 
     public int getMaxTransceiveLength() throws IOException {
@@ -62,18 +84,33 @@ public class AndroidCard implements IsoCard {
     }
 
     public void close() throws IOException {
-        card.close();
+        try {
+            card.close();
+        } catch(IOException e) {
+            notifyListeners(e);
+            throw e;
+        }
     }
 
     public byte[] transceive(byte [] command) throws IOException {
-        return card.transceive(command);
+        try {
+            return card.transceive(command);
+        } catch(IOException e) {
+            notifyListeners(e);
+            throw e;
+        }
     }
 
     public List<byte[]> transceive(List<byte[]> commands) throws IOException {
-        ArrayList<byte[]> responses = new ArrayList<byte[]>();
-        for(byte[] command: commands) {
-            responses.add(transceive(command));
+        try {
+            ArrayList<byte[]> responses = new ArrayList<byte[]>();
+            for(byte[] command: commands) {
+                responses.add(card.transceive(command));
+            }
+            return responses;
+        } catch(IOException e) {
+            notifyListeners(e);
+            throw e;
         }
-        return responses;
     }
 }

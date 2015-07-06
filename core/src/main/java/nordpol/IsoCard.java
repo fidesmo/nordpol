@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 public interface IsoCard {
+    public void addCardErrorListener(CardErrorListener listener);
+    public void removeCardErrorListener(CardErrorListener listener);
     public void close() throws IOException;
     public void connect() throws IOException;
     public int getMaxTransceiveLength() throws IOException;
