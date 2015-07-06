@@ -8,15 +8,15 @@ import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 
 import nordpol.IsoCard;
-import nordpol.CardErrorListener;
+import nordpol.OnCardErrorListener;
 
 public class AndroidCard implements IsoCard {
     private static final int DEFAULT_TIMEOUT = 15000;
     private static final int SAMSUNG_S5_MINI_MAX = 253;
 
     private IsoDep card;
-    private List<CardErrorListener> errorListeners =
-        new CopyOnWriteArrayList<CardErrorListener>();
+    private List<OnCardErrorListener> errorListeners =
+        new CopyOnWriteArrayList<OnCardErrorListener>();
 
     private AndroidCard(IsoDep card) {
         this.card = card;
@@ -41,16 +41,16 @@ public class AndroidCard implements IsoCard {
     }
 
     private void notifyListeners(IOException exception) {
-        for(CardErrorListener listener: errorListeners) {
+        for(OnCardErrorListener listener: errorListeners) {
             listener.error(this, exception);
         }
     }
 
-    public void addCardErrorListener(CardErrorListener listener) {
+    public void addOnCardErrorListener(OnCardErrorListener listener) {
         errorListeners.add(listener);
     }
 
-    public void removeCardErrorListener(CardErrorListener listener) {
+    public void removeOnCardErrorListener(OnCardErrorListener listener) {
         errorListeners.remove(listener);
     }
 
