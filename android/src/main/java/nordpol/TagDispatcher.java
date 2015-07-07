@@ -12,20 +12,20 @@ import android.os.Build;
 import android.os.Bundle;
 
 public class TagDispatcher {
-    private NfcAdapter.ReaderCallback callback;
+    private OnDiscoveredTagListener listener;
     private Activity activity;
     private NfcAdapter adapter;
 
     private TagDispatcher(Activity activity, NfcAdapter adapter,
-                          NfcAdapter.ReaderCallback callback) {
+                          OnDiscoveredTagListener listener) {
         this.activity = activity;
         this.adapter = adapter;
-        this.callback = callback;
+        this.listener = listener;
     }
 
     public static TagDispatcher get(Activity activity, NfcAdapter adapter,
-                                    NfcAdapter.ReaderCallback callback) {
-        return new TagDispatcher(activity, adapter, callback);
+                                    OnDiscoveredTagListener listener) {
+        return new TagDispatcher(activity, adapter, listener);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -49,7 +49,7 @@ public class TagDispatcher {
     public boolean interceptIntent(Intent intent) {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if(tag != null) {
-            callback.onTagDiscovered(tag);
+            listener.tagDiscovered(tag);
             return true;
         } else {
             return false;
@@ -63,6 +63,11 @@ public class TagDispatcher {
          * processing of the ongoing command.
          */
         options.putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 5000);
+        NfcAdapter.ReaderCallback callback = new NfcAdapter.ReaderCallback() {
+                public void onTagDiscovered(Tag tag) {
+                    listener.tagDiscovered(tag);
+                }
+            };
         adapter.enableReaderMode(activity,
                                  callback,
                                  NfcAdapter.FLAG_READER_NFC_A |
