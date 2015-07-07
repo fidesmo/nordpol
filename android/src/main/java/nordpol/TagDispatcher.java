@@ -14,35 +14,39 @@ import android.os.Bundle;
 public class TagDispatcher {
     private OnDiscoveredTagListener listener;
     private Activity activity;
-    private NfcAdapter adapter;
 
-    private TagDispatcher(Activity activity, NfcAdapter adapter,
+    private TagDispatcher(Activity activity,
                           OnDiscoveredTagListener listener) {
         this.activity = activity;
-        this.adapter = adapter;
         this.listener = listener;
     }
 
-    public static TagDispatcher get(Activity activity, NfcAdapter adapter,
+    public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener listener) {
-        return new TagDispatcher(activity, adapter, listener);
+        return new TagDispatcher(activity, listener);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void enableExclusiveNfc() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            enableReaderMode();
-        } else {
-            enableForegroundDispatch();
+        NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
+        if (adapter != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                enableReaderMode(adapter);
+            } else {
+                enableForegroundDispatch(adapter);
+            }
         }
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void disableExclusiveNfc() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            disableReaderMode();
-        } else {
-            disableForegroundDispatch();
+        NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
+        if (adapter != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                disableReaderMode(adapter);
+            } else {
+                disableForegroundDispatch(adapter);
+            }
         }
     }
 
@@ -56,7 +60,7 @@ public class TagDispatcher {
         }
     }
 
-    private void enableReaderMode() {
+    private void enableReaderMode(NfcAdapter adapter) {
         Bundle options = new Bundle();
         /* This is a work around for some Broadcom chipsets that does
          * the presence check by sending commands that interrupt the
@@ -76,17 +80,17 @@ public class TagDispatcher {
                                  options);
     }
 
-    private void disableReaderMode() {
+    private void disableReaderMode(NfcAdapter adapter) {
         adapter.disableReaderMode(activity);
     }
 
-    private void enableForegroundDispatch() {
+    private void enableForegroundDispatch(NfcAdapter adapter) {
         // activity.getIntent() can not be use due to issues with pending intents containg extras of custom classes (https://code.google.com/p/android/issues/detail?id=6822)
         Intent intent = new Intent(activity, activity.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        enableForegroundDispatch(intent);
+        enableForegroundDispatch(adapter, intent);
     }
 
-    private void enableForegroundDispatch(Intent intent) {
+    private void enableForegroundDispatch(NfcAdapter adapter, Intent intent) {
         if(adapter.isEnabled()) {
             PendingIntent tagIntent = PendingIntent.getActivity(activity, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             IntentFilter tag = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
@@ -96,7 +100,7 @@ public class TagDispatcher {
         }
     }
 
-    private void disableForegroundDispatch() {
+    private void disableForegroundDispatch(NfcAdapter adapter) {
         adapter.disableForegroundDispatch(activity);
     }
 
