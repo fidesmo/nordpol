@@ -26,8 +26,12 @@ public class TagDispatcher {
         return new TagDispatcher(activity, listener);
     }
 
+    /** Enable exclusive NFC access for the given activity.
+     * @returns true if NFC was available and false if no NFC is available
+     *          on device.
+     */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void enableExclusiveNfc() {
+    public boolean enableExclusiveNfc() {
         NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
         if (adapter != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -35,11 +39,17 @@ public class TagDispatcher {
             } else {
                 enableForegroundDispatch(adapter);
             }
+            return true;
         }
+        return false;
     }
 
+    /** Disable exclusive NFC access for the given activity.
+     * @returns true if NFC was available and false if no NFC is available
+     *          on device.
+     */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void disableExclusiveNfc() {
+    public boolean disableExclusiveNfc() {
         NfcAdapter adapter = NfcAdapter.getDefaultAdapter(activity);
         if (adapter != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -47,7 +57,9 @@ public class TagDispatcher {
             } else {
                 disableForegroundDispatch(adapter);
             }
+            return true;
         }
+        return false;
     }
 
     public boolean interceptIntent(Intent intent) {

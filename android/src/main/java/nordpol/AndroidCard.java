@@ -113,4 +113,8 @@ public class AndroidCard implements IsoCard {
             throw e;
         }
     }
+
+    public Tag getTag() {
+        return card.getTag();
+    }
 }
