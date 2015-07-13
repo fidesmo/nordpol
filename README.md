@@ -1,3 +1,4 @@
+![Nordpol icon](/nordpol_super_secret_nfc_project.png?raw=true)
 # Fidesmo Nordpol - The easiest way to connect a Fidesmo Device
 
 ## Goal of the project
