@@ -25,15 +25,14 @@ public class AndroidCard implements IsoCard {
     public static AndroidCard get(Tag tag) throws IOException {
         IsoDep card = IsoDep.get(tag);
 
-        /* Workaround for the Samsung Galaxy S5 (since the
-         * first connection always hangs on transceive).
-         * TODO: This could be improved if we could identify
-         * Samsung Galaxy S5 devices
-         */
-        card.connect();
-        card.close();
-
         if(card != null) {
+            /* Workaround for the Samsung Galaxy S5 (since the
+             * first connection always hangs on transceive).
+             * TODO: This could be improved if we could identify
+             * Samsung Galaxy S5 devices
+             */
+            card.connect();
+            card.close();
             return new AndroidCard(card);
         } else {
             return null;
