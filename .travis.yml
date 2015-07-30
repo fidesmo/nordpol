@@ -12,6 +12,10 @@ before_install:
   - echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
   - sudo apt-get update -qq
   - sudo apt-get install -qq -y --force-yes sbt
+  # BasePlugin requires those to be set, but secure values are not available in pull-request from other repos
+  # real credentials are only required on master branch or tag after succesfull build
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && export S3_ACCESS_KEY="invalid"'
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && export S3_SECRET_KEY="invalid"'
 script: sbt compile test
 notifications:
   email: false
