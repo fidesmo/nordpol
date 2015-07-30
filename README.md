@@ -25,3 +25,16 @@ dependencies {
 ## API
 
 TBD
+
+## Contributions
+
+Additions, bugfixes and issues are very welcome. Added code should be
+formatted and structured according to [Googles
+styleguide](http://google.github.io/styleguide/javaguide.html). A pull
+request should pass the Travis CI before it is merged. If possible
+a pull request should be rebased to the most recent master
+commit. Don't forget to add yourself to the list of contributors below.
+
+Thanks for your contributions:
+
+- [adriaan-telcred](https://github.com/adriaan-telcred)
