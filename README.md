@@ -26,6 +26,26 @@ dependencies {
 
 TBD
 
+## Building
+
+We use SBT for building. Get it
+[here](http://www.scala-sbt.org/download.html)
+
+The android subproject expects a local.properties file that points to
+the Android SDK. So to build you need to create the file
+`android/local.properties` (relative to the root directory of the
+repository) containing the following:
+
+On UNIX
+```
+sdk.dir = /path/to/android/sdk
+```
+
+On Windows
+```
+sdk.dir = Z:\\path\to\android\sdk
+```
+
 ## Contributions
 
 Additions, bugfixes and issues are very welcome. Added code should be
