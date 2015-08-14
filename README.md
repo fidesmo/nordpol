@@ -19,7 +19,7 @@ repositories {
 }
 dependencies {
     ...
-    compile group: 'com.fidesmo', name: 'nordpol-android', version: '0.1.0', ext: 'aar', transitive: true
+    compile group: 'com.fidesmo', name: 'nordpol-android', version: '0.1.4', ext: 'aar', transitive: true
 }
 ```
 ## API
