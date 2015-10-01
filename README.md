@@ -1,5 +1,5 @@
 ![Nordpol icon](/nordpol_super_secret_nfc_project.png?raw=true)
-# Fidesmo Nordpol - The easiest way to connect a Fidesmo Device
+# Fidesmo Nordpol - The Android Support Library for NFC
 
 ## Goal of the project
 To make it as easy as possible to communicate with a NFC device using ISO 14443-4 commands. Specifically we are targeting devices that communicates using ISO 7816-4 APDUs.
