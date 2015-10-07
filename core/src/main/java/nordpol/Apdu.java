@@ -3,6 +3,8 @@ package nordpol;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.io.IOException;
+import nordpol.IsoCard;
 
 /**
  * Utility functions APDU generation / parsing
@@ -13,6 +15,8 @@ public class Apdu {
 
     final private static String FIDESMO_AID_PREFIX = "A00000061700";
     final private static String SELECT_HEADER = "00A40400";
+    public final static String OK_APDU = "9000";
+    public final static String GET_RESPONSE_APDU = "00C0000000";
 
     /**
      * Encodes a byte array into a hexadecimal string having two characters per byte
@@ -97,4 +101,103 @@ public class Apdu {
         return Arrays.copyOfRange(response, 0, response.length - 2);
     }
 
+    /**
+     * Matches the first APDUs last characters (of the length of the statusCode) against the statusCode
+     * @param receivedApdu The response APDU as byte[] to be compared
+     * @param statusCode The statusCode as byte[] to match against
+     * @return true if the APDUs match, false if not
+     */
+    public static boolean hasStatus(byte[] receivedApdu, byte[] statusCode) throws IOException {
+        return hasStatus(encodeHex(receivedApdu), encodeHex(statusCode));
+    }
+
+    /**
+     * Matches the first APDUs last characters (of the length of the statusCode) against the statusCode
+     * @param receivedApdu The response APDU as byte[] to be compared
+     * @param statusCode The statusCode as String to match against
+     * @return true if the APDUs match, false if not
+     */
+    public static boolean hasStatus(byte[] receivedApdu, String statusCode) throws IOException {
+        return hasStatus(encodeHex(receivedApdu), statusCode);
+    }
+
+    /**
+     * Matches the first APDUs last characters (of the length of the statusCode) against the statusCode
+     * @param receivedApdu The response APDU as String to be compared
+     * @param statusCode The statusCode as String to match against
+     * @return true if the APDUs match, false if not
+     */
+    public static boolean hasStatus(String receivedApdu, String statusCode) throws IOException {
+        String concatReceivedApdu = shortenString(receivedApdu, statusCode.length());
+        return concatReceivedApdu.equalsIgnoreCase(statusCode);
+    }
+
+    /**
+     * Transceives the byte[] command to the IsoCard. Automatically queries for
+     * more response data if the status code indicates that more data is available.
+     * @param command The byte[] APDU command to be sent to the card
+     * @param isoCard The card to send the command to
+     * @return byte[] response from the card
+     */
+    public static byte[] transceiveAndGetResponse(byte[] command, IsoCard isoCard) throws IOException {
+        return transceiveAndGetResponse(command, isoCard, GET_RESPONSE_APDU);
+    }
+
+    /**
+     * Transceives the byte[] command to the Isocard. Automatically queries for
+     * more response data if the status code indicates that more data is available.
+     * @param command The byte[] APDU command to be sent to the card
+     * @param isoCard The card to send the command to
+     * @param getResponseApdu Parameter for custom GET_RESPONSE_APDU.
+     * @return byte[] response from the card
+     */
+    public static byte[] transceiveAndGetResponse(byte[] command, IsoCard isoCard, String getResponseApdu) throws IOException {
+        //Transfer first message
+        byte[] resp = isoCard.transceive(command);
+        byte[] buf = new byte[2048];
+        int offset = 0;
+
+        //Transfer the remains
+        while (resp[resp.length - 2] == 0x61) {
+            System.arraycopy(resp, 0, buf, offset, resp.length - 2);
+            offset += resp.length - 2;
+            resp = isoCard.transceive(decodeHex(getResponseApdu));
+        }
+
+        System.arraycopy(resp, 0, buf, offset, resp.length);
+        byte[] properlySized = new byte[offset + resp.length];
+        System.arraycopy(buf, 0, properlySized, 0, properlySized.length);
+
+        return properlySized;
+    }
+
+    /**
+     * Transceives the byte[] command to the IsoCard. Matches the response against the supplied expectedApduStatus
+     * @param command The byte[] APDU command to be sent to the card
+     * @param isoCard The card to send the command to
+     * @param expectedApduStatus The expected apdu status that the response should contain.
+     * @return byte[] response from the card if match with expectedApduStatus else it throws exception
+     */
+    public static byte[] transceiveAndRequireStatus(byte[] command, IsoCard isoCard, String expectedApduStatus) throws IOException {
+        byte[] response = isoCard.transceive(command);
+        if(hasStatus(response, expectedApduStatus)){
+          return response;
+        } else {
+          throw new IOException("Require APDU status: " + expectedApduStatus + ", got " + response);
+        }
+    }
+
+    /**
+     * Transceives the byte[] command to the IsoCard. Matches the response against the supplied expectedApduStatus
+     * @param command The byte[] APDU command to be sent to the card
+     * @param isoCard The card to send the command to
+     * @return byte[] response from the card if match with OK_APDU else it throws exception
+     */
+    public static byte[] transceiveAndRequireOk(byte[] command, IsoCard isoCard) throws IOException {
+        return transceiveAndRequireStatus(command, isoCard, OK_APDU);
+    }
+
+    private static String shortenString(String string, int expectedSize){
+         return string.substring(string.length() - expectedSize);
+    }
 }
