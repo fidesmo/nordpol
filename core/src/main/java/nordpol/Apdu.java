@@ -16,7 +16,6 @@ public class Apdu {
     final private static String FIDESMO_AID_PREFIX = "A00000061700";
     final private static String SELECT_HEADER = "00A40400";
     public final static String OK_APDU = "9000";
-    public final static String GET_RESPONSE_APDU = "00C0000000";
 
     /**
      * Encodes a byte array into a hexadecimal string having two characters per byte
@@ -108,7 +107,8 @@ public class Apdu {
      * @return true if the APDUs match, false if not
      */
     public static boolean hasStatus(byte[] receivedApdu, byte[] statusCode) throws IOException {
-        return hasStatus(encodeHex(receivedApdu), encodeHex(statusCode));
+        byte[] receivedStatus = statusBytes(receivedApdu);
+        return receivedStatus[0] == statusCode[0] && receivedStatus[1] == statusCode[1];
     }
 
     /**
@@ -118,7 +118,7 @@ public class Apdu {
      * @return true if the APDUs match, false if not
      */
     public static boolean hasStatus(byte[] receivedApdu, String statusCode) throws IOException {
-        return hasStatus(encodeHex(receivedApdu), statusCode);
+        return hasStatus(receivedApdu, decodeHex(statusCode));
     }
 
     /**
@@ -128,19 +128,7 @@ public class Apdu {
      * @return true if the APDUs match, false if not
      */
     public static boolean hasStatus(String receivedApdu, String statusCode) throws IOException {
-        String concatReceivedApdu = shortenString(receivedApdu, statusCode.length());
-        return concatReceivedApdu.equalsIgnoreCase(statusCode);
-    }
-
-    /**
-     * Transceives the byte[] command to the IsoCard. Automatically queries for
-     * more response data if the status code indicates that more data is available.
-     * @param command The byte[] APDU command to be sent to the card
-     * @param isoCard The card to send the command to
-     * @return byte[] response from the card
-     */
-    public static byte[] transceiveAndGetResponse(byte[] command, IsoCard isoCard) throws IOException {
-        return transceiveAndGetResponse(command, isoCard, GET_RESPONSE_APDU);
+        return hasStatus(decodeHex(receivedApdu), decodeHex(statusCode));
     }
 
     /**
@@ -148,7 +136,7 @@ public class Apdu {
      * more response data if the status code indicates that more data is available.
      * @param command The byte[] APDU command to be sent to the card
      * @param isoCard The card to send the command to
-     * @param getResponseApdu Parameter for custom GET_RESPONSE_APDU.
+     * @param getResponseApdu The APDU command to be sent to get more data
      * @return byte[] response from the card
      */
     public static byte[] transceiveAndGetResponse(byte[] command, IsoCard isoCard, String getResponseApdu) throws IOException {
