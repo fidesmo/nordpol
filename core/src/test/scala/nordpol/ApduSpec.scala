@@ -57,4 +57,26 @@ class ApduSpec extends WordSpec with Matchers {
       Apdu.responseData(Array[Byte](0x01.toByte, 0x90.toByte, 0x00.toByte)) shouldEqual Array[Byte](0x01.toByte)
     }
   }
+  "Apdu.hasStatus" should {
+    "match a 0x9000 response" in {
+      Apdu.hasStatus(Array[Byte](0x00, 0x00, 0x90.toByte, 0x00), Array[Byte](0x90.toByte, 0x00)) shouldEqual true
+    }
+
+    "don't match a 0x9090 response" in {
+      Apdu.hasStatus(Array[Byte](0x00, 0x00, 0x90.toByte, 0x90.toByte), Array[Byte](0x90.toByte, 0x00)) shouldEqual false
+    }
+
+    "don't match failure with a 0x9000 response" in {
+      Apdu.hasStatus(Array[Byte](0x00, 0x00, 0x6F.toByte, 0x00), Array[Byte](0x90.toByte, 0x00)) shouldEqual false
+    }
+
+    "match a 0x9000 response with a hex string" in {
+      Apdu.hasStatus(Array[Byte](0x00, 0x00, 0x90.toByte, 0x00), "9000") shouldEqual true
+    }
+
+    "match a 9000 hex string response with a hex string" in {
+      Apdu.hasStatus("00009000", "9000") shouldEqual true
+    }
+  }
+
 }

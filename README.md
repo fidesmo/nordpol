@@ -22,9 +22,39 @@ dependencies {
     compile group: 'com.fidesmo', name: 'nordpol-android', version: '0.1.5', ext: 'aar', transitive: true
 }
 ```
+
+If you are using proguard, it will remove methods internal to Nordpol
+which are called by the android system when a card is detected. To
+alleviate this please add the following to your proguard
+configuration:
+```
+# The Nordpol library contains methods that will be invoked by the
+# system and will therefore be removed by proguard. This forces
+# proguard to keep those methods.
+-keep class nordpol.** { *; }
+```
+
+You will also be warned that Nordpol uses classes if you are
+supporting pre 4.4 devices. The library detects the platform version
+use the right methods internally. Add the following to ignore those
+warnings:
+```
+# The Nordpol library contains references to newer platform versions.
+# Don't warn about those in case this app is linking against an older
+# platform version.  We know about them, and they are safe.
+-dontwarn nordpol.android.**
+```
+
 ## API
 
-TBD
+There are two tutorials introducing the Nordpol API.
+[The first and simplest one](https://developer.fidesmo.com/tutorials/android)
+is part of
+[a bigger suite of tutorials](https://developer.fidesmo.com/tutorials/javacard)
+on how to program for the Fidesmo
+Card. [The second one](https://developer.fidesmo.com/tutorials/android-totp)
+is slightly more advanced and shows how to interact with an
+[OTP device](https://github.com/Yubico/ykneo-oath).
 
 ## Building
 
