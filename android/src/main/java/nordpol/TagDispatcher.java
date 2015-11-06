@@ -14,9 +14,10 @@ import android.widget.Toast;
 
 public class TagDispatcher {
     private static final int DELAY_PRESENCE = 5000;
-    
+
     private OnDiscoveredTagListener tagDiscoveredListener;
     private boolean handleUnavailableNfc;
+    private boolean disableSounds;
     private Activity activity;
 
     public enum NfcStatus {
@@ -27,21 +28,31 @@ public class TagDispatcher {
 
     private TagDispatcher(Activity activity,
                           OnDiscoveredTagListener tagDiscoveredListener,
-                          boolean handleUnavailableNfc) {
+                          boolean handleUnavailableNfc,
+                          boolean disableSounds) {
         this.activity = activity;
         this.tagDiscoveredListener = tagDiscoveredListener;
         this.handleUnavailableNfc = handleUnavailableNfc;
+        this.disableSounds = disableSounds;
     }
 
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
+                                    boolean handleUnavailableNfc,
+                                    boolean disableSounds) {
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds);
+    }
+
+
+    public static TagDispatcher get(Activity activity,
+                                    OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc) {
-        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc);
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, false);
     }
 
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener) {
-        return new TagDispatcher(activity, tagDiscoveredListener, true);
+        return new TagDispatcher(activity, tagDiscoveredListener, true, false);
     }
 
 
@@ -89,9 +100,9 @@ public class TagDispatcher {
     }
 
     /** Call the TagDispatcher's listener.
-     * This applies only to older Android versions (pre-KITKAT) and must 
+     * This applies only to older Android versions (pre-KITKAT) and must
      * be called from onNewIntent(...) in the TagDispatcher's activity.
-     * 
+     *
      * @see {@link http://developer.android.com/reference/android/app/Activity.html#onNewIntent%28android.content.Intent%29}
      * @param intent
      * @return true if a tag was discovered.
@@ -118,12 +129,16 @@ public class TagDispatcher {
                     tagDiscoveredListener.tagDiscovered(tag);
                 }
             };
-        adapter.enableReaderMode(activity,
-                                 callback,
-                                 NfcAdapter.FLAG_READER_NFC_A |
-                                 NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK |
-                                 NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS,
-                                 options);
+        int flags;
+        if(disableSounds) {
+            flags = NfcAdapter.FLAG_READER_NFC_A |
+                NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK |
+                NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
+        } else {
+            flags = NfcAdapter.FLAG_READER_NFC_A |
+                NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK;
+        }
+        adapter.enableReaderMode(activity, callback, flags, options);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -132,8 +147,8 @@ public class TagDispatcher {
     }
 
     private void enableForegroundDispatch(NfcAdapter adapter) {
-        /* activity.getIntent() can not be used due to issues with 
-         * pending intents containing extras of custom classes 
+        /* activity.getIntent() can not be used due to issues with
+         * pending intents containing extras of custom classes
          * (https://code.google.com/p/android/issues/detail?id=6822)
          */
         Intent intent = new Intent(activity, activity.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
