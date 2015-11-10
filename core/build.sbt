@@ -8,7 +8,7 @@ crossPaths := false
 // Prevents the scala stdlib from beeing included automatically
 autoScalaLibrary := false
 
-javacOptions ++= Seq("-source", "1.6", "-target", "1.6", "-Xlint:unchecked", "-Xlint:deprecation")
+javacOptions in (Compile, compile) ++= Seq("-source", "1.6", "-target", "1.6", "-Xlint:unchecked", "-Xlint:deprecation")
 
 publishMavenStyle := true
 
