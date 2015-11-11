@@ -33,7 +33,7 @@ public class Apdu {
     }
     /**
      * Encodes a byte into a hexadecimal string
-     * @param byte the input byte
+     * @param b the input byte
      * @return the resulting hex string
      */
     public static String encodeHex(byte b) {
