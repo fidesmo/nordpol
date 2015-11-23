@@ -45,7 +45,10 @@ warnings:
 -dontwarn nordpol.android.**
 ```
 
-## API
+## API Documentation
+
+- [Latest (master/HEAD) Android API](http://nordpol.fidesmo.com.s3-website-eu-west-1.amazonaws.com/master/android/index.html)
+- [Latest (master/HEAD) core API](http://nordpol.fidesmo.com.s3-website-eu-west-1.amazonaws.com/master/core/index.html)
 
 There are two tutorials introducing the Nordpol API.
 [The first and simplest one](https://developer.fidesmo.com/tutorials/android)
