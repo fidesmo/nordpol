@@ -25,6 +25,7 @@ import nordpol.android.OnDiscoveredTagListener;
  */
 
 public class TagArbiter implements OnDiscoveredTagListener {
+    private static TagArbiter instance = new TagArbiter();
     private OnDiscoveredTagListener onDiscoveredTagListener = null;
     private Tag lastTag = null;
 
@@ -70,5 +71,13 @@ public class TagArbiter implements OnDiscoveredTagListener {
     public void tagErrored(Tag tag) {
         if(lastTag == tag)
             lastTag = null;
+    }
+
+    /**
+     * Factory method that returns a singleton instance of this class
+     * @returns The singleton instance of this class
+     */
+    public static TagArbiter getTagArbiter() {
+        return instance;
     }
 }
