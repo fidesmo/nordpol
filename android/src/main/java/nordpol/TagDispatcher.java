@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.AsyncTask;
+import android.os.Looper;
+import android.os.Handler;
 import android.widget.Toast;
 
 public class TagDispatcher {
@@ -18,6 +21,7 @@ public class TagDispatcher {
     private OnDiscoveredTagListener tagDiscoveredListener;
     private boolean handleUnavailableNfc;
     private boolean disableSounds;
+    private boolean dispatchOnUiThread;
     private Activity activity;
 
     public enum NfcStatus {
@@ -29,30 +33,40 @@ public class TagDispatcher {
     private TagDispatcher(Activity activity,
                           OnDiscoveredTagListener tagDiscoveredListener,
                           boolean handleUnavailableNfc,
-                          boolean disableSounds) {
+                          boolean disableSounds,
+                          boolean dispatchOnUiThread) {
         this.activity = activity;
         this.tagDiscoveredListener = tagDiscoveredListener;
         this.handleUnavailableNfc = handleUnavailableNfc;
         this.disableSounds = disableSounds;
+        this.dispatchOnUiThread = dispatchOnUiThread;
+    }
+
+    public static TagDispatcher get(Activity activity,
+                                    OnDiscoveredTagListener tagDiscoveredListener,
+                                    boolean handleUnavailableNfc,
+                                    boolean disableSounds,
+                                    boolean dispatchOnUiThread) {
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds, dispatchOnUiThread);
     }
 
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc,
                                     boolean disableSounds) {
-        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds);
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds, true);
     }
 
 
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc) {
-        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, false);
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, false, true);
     }
 
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener) {
-        return new TagDispatcher(activity, tagDiscoveredListener, true, false);
+        return new TagDispatcher(activity, tagDiscoveredListener, true, false, true);
     }
 
 
@@ -110,12 +124,37 @@ public class TagDispatcher {
     public boolean interceptIntent(Intent intent) {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if(tag != null) {
-            tagDiscoveredListener.tagDiscovered(tag);
+            dispatchTag(tag);
             return true;
         } else {
             return false;
         }
     }
+
+    private void dispatchTag(final Tag tag) {
+        if(dispatchOnUiThread) {
+            if(Looper.myLooper() != Looper.getMainLooper()) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            tagDiscoveredListener.tagDiscovered(tag);
+                        }
+                    });
+            } else {
+                tagDiscoveredListener.tagDiscovered(tag);
+            }
+
+        } else {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... aParams) {
+                    tagDiscoveredListener.tagDiscovered(tag);
+                    return null;
+                }
+            }.execute();
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void enableReaderMode(NfcAdapter adapter) {
         Bundle options = new Bundle();
@@ -126,7 +165,7 @@ public class TagDispatcher {
         options.putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, DELAY_PRESENCE);
         NfcAdapter.ReaderCallback callback = new NfcAdapter.ReaderCallback() {
                 public void onTagDiscovered(Tag tag) {
-                    tagDiscoveredListener.tagDiscovered(tag);
+                    dispatchTag(tag);
                 }
             };
         int flags;
