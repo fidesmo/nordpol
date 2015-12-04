@@ -22,6 +22,7 @@ public class TagDispatcher {
     private boolean handleUnavailableNfc;
     private boolean disableSounds;
     private boolean dispatchOnUiThread;
+    private boolean broadcomWorkaround;
     private Activity activity;
 
     public enum NfcStatus {
@@ -34,12 +35,24 @@ public class TagDispatcher {
                           OnDiscoveredTagListener tagDiscoveredListener,
                           boolean handleUnavailableNfc,
                           boolean disableSounds,
-                          boolean dispatchOnUiThread) {
+                          boolean dispatchOnUiThread,
+                          boolean broadcomWorkaround) {
         this.activity = activity;
         this.tagDiscoveredListener = tagDiscoveredListener;
         this.handleUnavailableNfc = handleUnavailableNfc;
         this.disableSounds = disableSounds;
         this.dispatchOnUiThread = dispatchOnUiThread;
+        this.broadcomWorkaround = broadcomWorkaround;
+    }
+
+    public static TagDispatcher get(Activity activity,
+                                    OnDiscoveredTagListener tagDiscoveredListener,
+                                    boolean handleUnavailableNfc,
+                                    boolean disableSounds,
+                                    boolean dispatchOnUiThread,
+                                    boolean broadcomWorkaround) {
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds,
+                                 dispatchOnUiThread, broadcomWorkaround);
     }
 
     public static TagDispatcher get(Activity activity,
@@ -47,26 +60,26 @@ public class TagDispatcher {
                                     boolean handleUnavailableNfc,
                                     boolean disableSounds,
                                     boolean dispatchOnUiThread) {
-        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds, dispatchOnUiThread);
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds, dispatchOnUiThread, true);
     }
 
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc,
                                     boolean disableSounds) {
-        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds, true);
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds, true, true);
     }
 
 
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc) {
-        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, false, true);
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, false, true, true);
     }
 
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener) {
-        return new TagDispatcher(activity, tagDiscoveredListener, true, false, true);
+        return new TagDispatcher(activity, tagDiscoveredListener, true, false, true, true);
     }
 
 
@@ -158,11 +171,13 @@ public class TagDispatcher {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void enableReaderMode(NfcAdapter adapter) {
         Bundle options = new Bundle();
-        /* This is a work around for some Broadcom chipsets that does
-         * the presence check by sending commands that interrupt the
-         * processing of the ongoing command.
-         */
-        options.putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, DELAY_PRESENCE);
+        if(broadcomWorkaround) {
+            /* This is a work around for some Broadcom chipsets that does
+             * the presence check by sending commands that interrupt the
+             * processing of the ongoing command.
+             */
+            options.putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, DELAY_PRESENCE);
+        }
         NfcAdapter.ReaderCallback callback = new NfcAdapter.ReaderCallback() {
                 public void onTagDiscovered(Tag tag) {
                     dispatchTag(tag);
