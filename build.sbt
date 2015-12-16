@@ -2,6 +2,7 @@ val baseSettings = BaseProject.metaSettings ++ BaseProject.scalaSettings ++
   BaseProject.scalariformSettings ++ BaseProject.releaseSettings ++
   Seq(
     publishMavenStyle := true,
+    bintrayCredentialsFile := Path(sys.env.get("TRAVIS_BUILD_DIR").get) / ".bintray",
     bintrayOrganization := Some("fidesmo"),
     bintrayPackageLabels := Seq("android", "nfc"),
     licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
