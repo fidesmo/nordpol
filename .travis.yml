@@ -32,7 +32,7 @@ env:
 
 # publish artifcats
 after_success:
-- ! '[[ $TRAVIS_BRANCH =~ ^(v[0-9]+\.[0-9]+\.[0-9]+|master)$ && $TRAVIS_PULL_REQUEST
+- ! '[[ $TRAVIS_BRANCH =~ ^(v[0-9]+\.[0-9]+\.[0-9]+)$ && $TRAVIS_PULL_REQUEST
   = false ]] && sbt publish'
 
 # publish docs
