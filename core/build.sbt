@@ -1,5 +1,3 @@
-BaseProject.settings
-
 name := "nordpol-core"
 
 // Do not append Scala versions to the generated artifacts
@@ -9,12 +7,3 @@ crossPaths := false
 autoScalaLibrary := false
 
 javacOptions in (Compile, compile) ++= Seq("-source", "1.6", "-target", "1.6", "-Xlint:unchecked", "-Xlint:deprecation")
-
-publishMavenStyle := true
-
-publishTo := Some(
-  if (isSnapshot.value) {
-    BaseProject.marmeladSnapshotsMavenStyle
-  } else {
-    BaseProject.marmeladReleasesMavenStyle
-  })

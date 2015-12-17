@@ -7,7 +7,7 @@ android:
     # The SDK version used to compile your project
     - android-22
 jdk:
-  - openjdk7
+  - oraclejdk7
 before_install:
   - echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
   - sudo apt-get update -qq
@@ -29,11 +29,12 @@ env:
   global:
   - secure: "vc049RyHxdkTSfoLmITY/XFQ80zbLRWXrJfZGVPnO1ivvtZCmIvQZJl03N5Xtys6vj9Qt8JpmCXK4NWy5EzYRDiqrQtC+RJM3XqrnnOdb+B9s3AMENj2MpRtM8DxLG0OihhhMtrUFAEJS2JQuv5OAfuNwAjbuuWxLt0G95nHAabiMHj3RjOQrnrHfhrkCKNwATvxNAu+7E6/ZqwdAiHj4+tffLj3fl8uxp81nClouUGCMeF0HNAN2IKEHrG0onnTKy6VCu87XoTesjIFNAYzqzjmXkuQpqZw/dQXU7cWAFWEoFP2WCmOSmGXo+t9tJlatU5Sw5QKAKGkJZXO20IWmUAZZZuu2Rp1iBuCAEAclOqkkEGHxuS4PnFLLt+tt3tMEe6YnBvAC6tMavZZRNPIf/aNRZ149lcV1G//4C5O007tvLDoJ9qdmW/g1E3+F4i1hrOXlgysDN/jH1HF+4g+e2Dm4k4NaR7ASlPAsGPZgulh6Uo/A2Yz4wRbrMDY+4AGstvLj9FPKd3y5Gl5/k5IfSeDvIKh5nIocr7K9F3R7X21aMOk7UCQLRJtmxhrWybL1rN7YOiLGp0JP8O4T0w7odlNHm6PXulvdZOzAp6M+BteDWesHCJq6AOUBPvjZ2mSliMBmL6lYNDNEnGr9KLqCRLIo5VwmqCyfE/zQjZiVCs="
   - secure: "H+eghaoTVBVMlgvhA9O4dDr/SF9nn+CnKPT4eJlCiX22wt7qzStT8VYKweLyU2M0N/K+qXBQpJdG5BBgebff2L0kclHZbOmsntIYAtHbD1p1jZ0OWMpU/ZJrVP2d/B8FlYs0lOsxTY7rK/UTd0LznZIvRMbYUXSgYTIdPvUuJ10qy+enCB8e40Gu+7VeziXfHM3wDp/UcDUoWL/ZYnglBNPExehJ+ln/4x4XzG+eSUIYgBCNoQj4NruRQujbuXVq2DGFPtF7f2SlK4yIpY+HfMLRx5Na1myNMU5bgdLbhZOa8R9PqjyEl7/0rRJtKE7oz0e5GhoIn75OPpSBFwASH8lIEfE32vz8X7AR5gwVQOR7D3W3kix38s+xOE6n6NfMJp8QKzvhCeKK8Ad8A+mYOgRwFKTjGUq4DddmGWAiUQpMBqyz4TqJQazX1ewkpaK3J3r7xBVcrfHU7a2M+rSoD6WKLbd35Vk/0bIS2tCnQFGlJrVKEivzBv9Ex6dAR+ZbCzojJT55d8B7rhlt1QkGYgiB6KFELHB/T2TNMejpWyd3S7mAnAwYqFjxudmDLhe7Hh333ViFgyp/CAA0Tkw/2L1ukR8Gz0EllchptQ47QCKbUF/iq03yhkU9EXQ706JazNC6zClKnfVqpQbnDwjtjpzbVdQLbnP2u5mLn8pDp4s="
-
+  - secure: "cBHX3EW16s/xt84zWRw4ebivle5diWdCzQc4sB2m/8X6Uvvc/5nZYdBIKr1l1EIQT5LBQPAu4+Kh3Jbx4xfafjXb4djVtxnQEGiym6DO3Vt4sMybD1uTElJlJiq9sbd8G6q7xJtFtA06H8zGzq4aDANynNU/vnk7gLGEMKnUMeTBwJlKu9cl0KD11rlHk9CXKozOfm3eWKNhqKb64ZITK2/V/ImhbBcIxqdtWJ2rWaM0+e9izDkf7CMDaOzhUq/Kp5aeM2dkBAWE58I+y7mO8rOTo3yfZhvASd8DHuWADhEEmqvdSgA3u9R41q+Jcwi6wK/44QSX0o5oDzlPBgLgSKUz+zn5Jxl2/IoivxG5C08xtA0tznGd9zvDzyEbPyNNIEm5Q1rACTG2OUQuyvjrvn4TQDjCxRp3t6sDvY4WdyJ8DkcraD3dojup+0TF0fKP6mBcP0vrWihrcauGJrmPkE6/HQ0DGbAqzqUgzL5uK3wjc8h7PbdlYtF6uhuw9mqTOCiA3md7M1JYLgIdnt5z2rwVCPa1IyHCgXAtrFGGF9LhFXcE1ADUD8KNTagqoti4HqbYfkHjOhgkbbBmKYITlaYaZqRf92sikXgbpFKrbcwg7sLpG5fwQdNrukiio4UoQdy4rxa439isGy60IfK4BUeVFuvFHs5g/6GSNGgGz08="
+  - secure: "nk0QY1gDGWY2H/Qy9wh5sE/YaNPsVXswNBqoSEnI+Vhj+pjjqi48Q133ZBCFxqBb1lkm8vkG4QpbyGDk7JJGt4npzCWaQFvQskI5905IkzDYUNlo/UVg28tqoRUH7nw0AfFk3zkJfug02QEYxPrRSDBU1+QkicBE+ctWawHXzwAImQ8oGJArDLzHdTE0WRAk2vl9XFIr644j4hGTwhaRnbfT5IS1bpfXLineCyuA+SZT0CeJ+Aveq+htnRjR+2XoD0ZkHLCY+8XTMZgI2kw7H3s/VRK3BCB6rDas0iSNVTF+YlOZZ3Cr/h8t/QkndIQR5vJ0CSiJQQnZA0To6RdN+O9NESUg7zjA4Zlg2psyjOKLf6Y5yZ9JJxZqMGVVu8Rmch5uLjvpioZQRsT4eSAP7YKLBRhLGOOlyny9RN+DOu6ehBLShbF048WDTEHSrRatcivlmv7aXzD6tg/J7ceA8s4p7T1DqcIyOioA2M8r5/KrYkDwfLk3fvecPp74Evd5Et72QfpA6zXCD5ADrhhQ/c0wq0EZ/L6uHaehctww5xNSnYd983UvKmNp5DZcVPYkRVRzMkaQS7A0/cydzpAGL8IboELsu3vBSZ1qHc+8zIsL1fxTMGp/JeMcrY4C+V1ViBKPccJY0ozfbAvsvRtQTJDRjWuk8Iba7K0ObbUOEmM="
 # publish artifcats
 after_success:
-- ! '[[ $TRAVIS_BRANCH =~ ^(v[0-9]+\.[0-9]+\.[0-9]+|master)$ && $TRAVIS_PULL_REQUEST
-  = false ]] && sbt publish'
+- ! '[[ $TRAVIS_BRANCH =~ ^(v[0-9]+\.[0-9]+\.[0-9]+)$ && $TRAVIS_PULL_REQUEST
+  = false ]] && ./create_credentials.sh && sbt publish'
 
 # publish docs
 before_deploy:

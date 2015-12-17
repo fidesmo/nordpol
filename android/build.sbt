@@ -1,5 +1,3 @@
-BaseProject.settings
-
 import android.Keys._
 
 android.Plugin.androidBuildAar
@@ -16,15 +14,6 @@ autoScalaLibrary := false
 
 javacOptions in (Compile, compile) ++= Seq("-source", "1.6", "-target", "1.6", "-Xlint:unchecked", "-Xlint:deprecation")
 
-publishMavenStyle := true
-
 publishArtifact in (Compile, packageDoc) := false
 
 publishArtifact in (Compile, packageSrc) := false
-
-publishTo := Some(
-  if (isSnapshot.value) {
-    BaseProject.marmeladSnapshotsMavenStyle
-  } else {
-    BaseProject.marmeladReleasesMavenStyle
-  })
