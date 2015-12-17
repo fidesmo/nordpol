@@ -12,6 +12,7 @@ val baseSettings = BaseProject.metaSettings ++ BaseProject.scalaSettings ++
   )
 
 lazy val base = project.in(file("."))
+  .settings(BaseProject.releaseSettings: _*)
   .settings(publish := ())
   .aggregate(core, android)
 
