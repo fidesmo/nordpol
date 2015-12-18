@@ -13,5 +13,3 @@ crossPaths := false
 autoScalaLibrary := false
 
 javacOptions in (Compile, compile) ++= Seq("-source", "1.6", "-target", "1.6", "-Xlint:unchecked", "-Xlint:deprecation")
-
-publishArtifact in (Compile, packageDoc) := false

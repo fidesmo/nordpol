@@ -75,7 +75,7 @@ public class TagArbiter implements OnDiscoveredTagListener {
 
     /**
      * Factory method that returns a singleton instance of this class
-     * @returns The singleton instance of this class
+     * @return The singleton instance of this class
      */
     public static TagArbiter getTagArbiter() {
         return instance;
