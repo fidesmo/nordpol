@@ -200,11 +200,9 @@ public class TagDispatcher {
         int flags;
         if(disableSounds) {
             flags = NfcAdapter.FLAG_READER_NFC_A |
-                NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK |
                 NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
         } else {
-            flags = NfcAdapter.FLAG_READER_NFC_A |
-                NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK;
+            flags = NfcAdapter.FLAG_READER_NFC_A;
         }
         adapter.enableReaderMode(activity, callback, flags, options);
     }
