@@ -1,7 +1,5 @@
 package nordpol.android;
 
-import java.io.IOException;
-
 import android.nfc.Tag;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.IsoDep;
@@ -16,13 +14,10 @@ import android.os.AsyncTask;
 import android.os.Looper;
 import android.os.Handler;
 import android.widget.Toast;
-import android.util.Log;
-
-import nordpol.Apdu;
 
 public class TagDispatcher {
     private static final int DELAY_PRESENCE = 5000;
-    private static final String TAG = "nordpol.android.TagDispatcher";
+
     private OnDiscoveredTagListener tagDiscoveredListener;
     private boolean handleUnavailableNfc;
     private boolean disableSounds;
@@ -163,53 +158,24 @@ public class TagDispatcher {
         }
     }
 
-    private void validateBeforeDispatch(final Tag tag) {
-        IsoDep card = IsoDep.get(tag);
-        try {
-            if(card != null) {
-                /* Workaround for the Samsung Galaxy S5 (since the
-                 * first connection always hangs on transceive).
-                 * TODO: This could be improved if we could identify
-                 * Samsung Galaxy S5 devices
-                 */
-                card.connect();
-                card.close();
-
-                /* By sending a select to the ISO compliant card, we
-                 * will require it to more processing. This will
-                 * trigger misbehaving NFC devices (typically devices
-                 * with a small antenna, like the Yubikey Neo) to fail
-                 * already before we dispatch the tag.
-                 */
-                card.connect();
-                card.transceive(Apdu.decodeHex("00A40400"));
-                card.close();
-                tagDiscoveredListener.tagDiscovered(tag);
-            }
-        } catch(IOException ioe) {
-            /* Don't dispatch failing tags */
-            Log.e(TAG, "Validation of connection failed: ", ioe);
-        }
-    }
-
     private void dispatchTag(final Tag tag) {
         if(dispatchOnUiThread) {
             if(Looper.myLooper() != Looper.getMainLooper()) {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            validateBeforeDispatch(tag);
+                            tagDiscoveredListener.tagDiscovered(tag);
                         }
                     });
             } else {
-                validateBeforeDispatch(tag);
+                tagDiscoveredListener.tagDiscovered(tag);
             }
 
         } else {
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... aParams) {
-                    validateBeforeDispatch(tag);
+                    tagDiscoveredListener.tagDiscovered(tag);
                     return null;
                 }
             }.execute();
@@ -234,11 +200,9 @@ public class TagDispatcher {
         int flags;
         if(disableSounds) {
             flags = NfcAdapter.FLAG_READER_NFC_A |
-                NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK |
                 NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
         } else {
-            flags = NfcAdapter.FLAG_READER_NFC_A |
-                NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK;
+            flags = NfcAdapter.FLAG_READER_NFC_A;
         }
         adapter.enableReaderMode(activity, callback, flags, options);
     }
