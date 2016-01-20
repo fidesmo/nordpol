@@ -9,17 +9,17 @@ Communicating with NFC devices using Android can sometimes be a bit challenging.
 
 ## Usage
 
-To include the project into your gradle android build:
+To include Nordpol into your gradle Android build add these imports to your ```build.gradle```:
 ```
 repositories {
     ...
-    maven {
-        url 'http://releases.marmeladburk.fidesmo.com'
-    }
+    jcenter()
 }
 dependencies {
     ...
-    compile group: 'com.fidesmo', name: 'nordpol-android', version: '0.1.5', ext: 'aar', transitive: true
+    //Nordpol
+    compile 'com.fidesmo:nordpol-android:0.1.15@aar'
+    compile 'com.fidesmo:nordpol-core:0.1.15'
 }
 ```
 
