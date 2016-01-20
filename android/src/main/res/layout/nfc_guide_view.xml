@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/nfc_guide_view_status_positive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/nfc_guide_view_checkmark"
+        android:alpha="0"/>
+
+    <ImageView
+        android:id="@+id/nfc_guide_view_status_negative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/nfc_guide_view_cross"
+        android:alpha="0"/>
+
+    <ImageView
+        android:id="@+id/nfc_guide_view_hand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/nfc_guide_view_hand_holding_card_fidesmo"
+        android:layout_centerInParent="true"
+        android:alpha="0"/>
+
+    <ImageView
+        android:id="@+id/nfc_guide_view_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/nfc_guide_view_nexus_five_crooked"
+        android:layout_centerInParent="true"
+        android:alpha="0"/>
+
+    <ProgressBar
+        android:id="@+id/nfc_guide_view_progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:alpha="0"/>
+
+</RelativeLayout>
