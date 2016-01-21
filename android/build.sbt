@@ -2,7 +2,7 @@ import android.Keys._
 
 android.Plugin.androidBuildAar
 
-platformTarget in Android := "android-22"
+platformTarget in Android := "android-23"
 
 name := "nordpol-android"
 
