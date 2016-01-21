@@ -18,8 +18,7 @@ repositories {
 dependencies {
     ...
     //Nordpol
-    compile 'com.fidesmo:nordpol-android:0.1.15@aar'
-    compile 'com.fidesmo:nordpol-core:0.1.15'
+    compile 'com.fidesmo:nordpol-android:0.1.15'
 }
 ```
 
