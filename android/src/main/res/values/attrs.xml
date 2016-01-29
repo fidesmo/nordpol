@@ -3,8 +3,8 @@
 <resources>
   <declare-styleable name="NfcGuideView">
     <attr name="nfc_device">
-      <enum name="card_fidesmo" value="0" />
-      <enum name="card_neutral" value="1" />
+      <enum name="card_ruby" value="0" />
+      <enum name="card_black" value="1" />
     </attr>
   </declare-styleable>
 </resources>

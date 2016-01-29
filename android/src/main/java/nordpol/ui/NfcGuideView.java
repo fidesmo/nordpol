@@ -29,8 +29,8 @@ import nordpol.android.R;
  *     android:layout_height="wrap_content"/>
  *
  * To choose between the different NFC device graphics add the following line:
- * For a neutral card: app:nfc_device="card_neutral"
- * For a Fidesmo card: app:nfc_device="card_fidesmo"
+ * For a black card: app:nfc_device="card_black"
+ * For a ruby card: app:nfc_device="card_ruby"
  *
  * After setting up the View as usually in Java you can call the
  * setCurrentStatus method on it to change between different NFC transaction
@@ -95,10 +95,10 @@ public class NfcGuideView extends RelativeLayout {
 
         switch(nfcDeviceDesign) {
         case 0:
-            mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_card_fidesmo));
+            mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_card_ruby));
             break;
         case 1:
-            mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_card_neutral));
+            mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_card_black));
             break;
         }
 
