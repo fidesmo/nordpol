@@ -24,6 +24,7 @@ public class TagDispatcher {
     private boolean dispatchOnUiThread;
     private boolean broadcomWorkaround;
     private boolean noReaderMode;
+    private boolean disableNdefCheck;
     private Activity activity;
 
     public enum NfcStatus {
@@ -38,7 +39,8 @@ public class TagDispatcher {
                           boolean disableSounds,
                           boolean dispatchOnUiThread,
                           boolean broadcomWorkaround,
-                          boolean noReaderMode) {
+                          boolean noReaderMode,
+                          boolean disableNdefCheck) {
         this.activity = activity;
         this.tagDiscoveredListener = tagDiscoveredListener;
         this.handleUnavailableNfc = handleUnavailableNfc;
@@ -46,6 +48,19 @@ public class TagDispatcher {
         this.dispatchOnUiThread = dispatchOnUiThread;
         this.broadcomWorkaround = broadcomWorkaround;
         this.noReaderMode = noReaderMode;
+        this.disableNdefCheck = disableNdefCheck;
+    }
+
+    public static TagDispatcher get(Activity activity,
+                                    OnDiscoveredTagListener tagDiscoveredListener,
+                                    boolean handleUnavailableNfc,
+                                    boolean disableSounds,
+                                    boolean dispatchOnUiThread,
+                                    boolean broadcomWorkaround,
+                                    boolean noReaderMode,
+                                    boolean disableNdefCheck) {
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds,
+                                 dispatchOnUiThread, broadcomWorkaround, noReaderMode, disableNdefCheck);
     }
 
     public static TagDispatcher get(Activity activity,
@@ -56,7 +71,7 @@ public class TagDispatcher {
                                     boolean broadcomWorkaround,
                                     boolean noReaderMode) {
         return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds,
-                                 dispatchOnUiThread, broadcomWorkaround, noReaderMode);
+                                 dispatchOnUiThread, broadcomWorkaround, noReaderMode, false);
     }
 
     public static TagDispatcher get(Activity activity,
@@ -66,7 +81,7 @@ public class TagDispatcher {
                                     boolean dispatchOnUiThread,
                                     boolean broadcomWorkaround) {
         return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds,
-                                 dispatchOnUiThread, broadcomWorkaround, false);
+                                 dispatchOnUiThread, broadcomWorkaround, false, false);
     }
 
     public static TagDispatcher get(Activity activity,
@@ -74,26 +89,30 @@ public class TagDispatcher {
                                     boolean handleUnavailableNfc,
                                     boolean disableSounds,
                                     boolean dispatchOnUiThread) {
-        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds, dispatchOnUiThread, true, false);
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds,
+                                 dispatchOnUiThread, true, false, false);
     }
 
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc,
                                     boolean disableSounds) {
-        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds, true, true, false);
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, disableSounds,
+                                 true, true, false, false);
     }
 
 
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc) {
-        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, false, true, true, false);
+        return new TagDispatcher(activity, tagDiscoveredListener, handleUnavailableNfc, false,
+                                 true, true, false, false);
     }
 
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener) {
-        return new TagDispatcher(activity, tagDiscoveredListener, true, false, true, true, false);
+        return new TagDispatcher(activity, tagDiscoveredListener, true, false,
+                                 true, true, false, false);
     }
 
 
@@ -197,12 +216,12 @@ public class TagDispatcher {
                     dispatchTag(tag);
                 }
             };
-        int flags;
+        int flags = NfcAdapter.FLAG_READER_NFC_A;
         if(disableSounds) {
-            flags = NfcAdapter.FLAG_READER_NFC_A |
-                NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
-        } else {
-            flags = NfcAdapter.FLAG_READER_NFC_A;
+            flags = flags | NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
+        }
+        if(disableNdefCheck) {
+            flags = flags | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK;
         }
         adapter.enableReaderMode(activity, callback, flags, options);
     }
