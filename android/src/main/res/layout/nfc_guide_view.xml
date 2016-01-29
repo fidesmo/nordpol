@@ -28,7 +28,7 @@
         android:id="@+id/nfc_guide_view_hand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/nfc_guide_view_hand_holding_card_fidesmo"
+        android:src="@drawable/nfc_guide_view_hand_holding_card_ruby"
         android:layout_centerInParent="true"
         android:alpha="0"/>
 
