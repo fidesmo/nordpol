@@ -5,6 +5,7 @@
     <attr name="nfc_device">
       <enum name="card_ruby" value="0" />
       <enum name="card_black" value="1" />
+      <enum name="usb_black" value="2" />
     </attr>
   </declare-styleable>
 </resources>
