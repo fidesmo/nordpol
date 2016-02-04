@@ -100,6 +100,9 @@ public class NfcGuideView extends RelativeLayout {
         case 1:
             mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_card_black));
             break;
+	case 2:
+	    mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_usb_black));
+            break;
         }
 
         mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
