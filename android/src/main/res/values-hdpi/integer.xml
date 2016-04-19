@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="GUIDE_ITEMS_START_DISTANCE">75</integer>
+</resources>

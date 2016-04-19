@@ -36,7 +36,7 @@
         android:id="@+id/nfc_guide_view_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/nfc_guide_view_nexus_five_crooked"
+        android:src="@drawable/nfc_guide_view_nexus_five"
         android:layout_centerInParent="true"
         android:alpha="0"/>
 
