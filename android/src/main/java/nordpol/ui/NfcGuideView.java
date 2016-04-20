@@ -31,6 +31,8 @@ import nordpol.android.R;
  * To choose between the different NFC device graphics add the following line:
  * For a black card: app:nfc_device="card_black"
  * For a ruby card: app:nfc_device="card_ruby"
+ * For a black USB: app:nfc_device="usb_black"
+ * For a black USB with a Fidesmo logo: app:nfc_device="usb_black_fidesmo"
  *
  * After setting up the View as usually in Java you can call the
  * setCurrentStatus method on it to change between different NFC transaction
@@ -44,7 +46,7 @@ import nordpol.android.R;
  * nfcGuideView.setCurrentStatus(NfcGuideView.NfcGuideViewStatus.TRANSFERRING);
  */
 public class NfcGuideView extends RelativeLayout {
-    private static final int GUIDE_ITEMS_START_DISTANCE = 100;
+    private int guideItemsStartDistance = 50;
     private static final int ANIMATION_DURATION_SHORT = 100;
     private static final int ANIMATION_DURATION_MEDIUM = 200;
     private static final int VALUE_ANIMATOR_DEFAULT_START_DELAY = 0;
@@ -70,6 +72,8 @@ public class NfcGuideView extends RelativeLayout {
 
     public NfcGuideView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        
+        guideItemsStartDistance = getResources().getInteger(R.integer.GUIDE_ITEMS_START_DISTANCE);
 
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(
           attrs,
@@ -100,8 +104,11 @@ public class NfcGuideView extends RelativeLayout {
         case 1:
             mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_card_black));
             break;
-	case 2:
-	    mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_usb_black));
+        case 2:
+            mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_usb_black));
+            break;
+        case 3:
+            mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_usb_black_fidesmo));
             break;
         }
 
@@ -172,15 +179,25 @@ public class NfcGuideView extends RelativeLayout {
     }
 
     private int getHandXStart() {
-        return Math.max(getViewCenter()-mNfcGuideHandWidth + GUIDE_ITEMS_START_DISTANCE, 0);
+        return Math.max(getViewCenter()-mNfcGuideHandWidth + guideItemsStartDistance, 0);
     }
 
     private int getPhoneXStart() {
-        return Math.min(getViewCenter() - GUIDE_ITEMS_START_DISTANCE, mRootViewWidth - mNfcGuidePhoneWidth);
+        return Math.min(getViewCenter() - guideItemsStartDistance, mRootViewWidth - mNfcGuidePhoneWidth);
     }
 
     private int getViewCenter(){
         return mRootViewWidth/2;
+    }
+    
+    private int getHandXTransferring() {
+        int centerOffsetXHand = guideItemsStartDistance + guideItemsStartDistance/2;
+        return Math.max(getViewCenter() - mNfcGuideHandWidth + centerOffsetXHand, 0);
+    }
+    
+    private int getPhoneXTransferring() {
+        int centerOffsetXPhone = guideItemsStartDistance + guideItemsStartDistance/2;
+        return Math.min(getViewCenter() - centerOffsetXPhone, mRootViewWidth - mNfcGuidePhoneWidth);
     }
 
     private void nfcGuideTransferring() {
@@ -194,18 +211,16 @@ public class NfcGuideView extends RelativeLayout {
         mStatusNegative
             .animate()
             .alpha(0f);
-
-        int handPosition = getViewCenter()-mNfcGuideHandWidth/2;
+        
         mNfcGuideHand
             .animate()
-            .x(handPosition)
+            .x(getHandXTransferring())
             .alpha(1f)
             .setInterpolator(new AccelerateDecelerateInterpolator());
 
-        int phonePosition = getViewCenter()-mNfcGuidePhoneWidth/2;
         mNfcGuidePhone
             .animate()
-            .x(phonePosition)
+            .x(getPhoneXTransferring())
             .alpha(1f)
             .setInterpolator(new AccelerateDecelerateInterpolator());
     }
