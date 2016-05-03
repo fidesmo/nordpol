@@ -23,10 +23,14 @@ import nordpol.android.R;
  * used.
  *
  * To use add NfcGuideView to your layout, like so:
+ * <pre>
+ * {@code
  * <nordpol.android.NfcGuideView
  *     android:id="@+id/nfc_guide_view"
  *     android:layout_width="match_parent"
  *     android:layout_height="wrap_content"/>
+ * }
+ * </pre>
  *
  * To choose between the different NFC device graphics add the following line:
  * For a black card: app:nfc_device="card_black"
@@ -72,7 +76,7 @@ public class NfcGuideView extends RelativeLayout {
 
     public NfcGuideView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        
+
         guideItemsStartDistance = getResources().getInteger(R.integer.GUIDE_ITEMS_START_DISTANCE);
 
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(
@@ -189,12 +193,12 @@ public class NfcGuideView extends RelativeLayout {
     private int getViewCenter(){
         return mRootViewWidth/2;
     }
-    
+
     private int getHandXTransferring() {
         int centerOffsetXHand = guideItemsStartDistance + guideItemsStartDistance/2;
         return Math.max(getViewCenter() - mNfcGuideHandWidth + centerOffsetXHand, 0);
     }
-    
+
     private int getPhoneXTransferring() {
         int centerOffsetXPhone = guideItemsStartDistance + guideItemsStartDistance/2;
         return Math.min(getViewCenter() - centerOffsetXPhone, mRootViewWidth - mNfcGuidePhoneWidth);
@@ -211,7 +215,7 @@ public class NfcGuideView extends RelativeLayout {
         mStatusNegative
             .animate()
             .alpha(0f);
-        
+
         mNfcGuideHand
             .animate()
             .x(getHandXTransferring())
