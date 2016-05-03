@@ -15,6 +15,29 @@ import android.os.Looper;
 import android.os.Handler;
 import android.widget.Toast;
 
+/**
+ * TagDispatcher provides a unified, simple and exclusive interface for NFC.
+ * <p>
+ * TagDispatcher provides an easy to use interface for getting tags no matter
+ * the version of Android. With the interface in place you'll always receive
+ * the tags the same way. While TagDispatcher is active ALL NFC activity will
+ * go directly to your implementation.
+ * <p>
+ * TagDispatcher is set up using the
+ * {@link TagDispatcherBuilder#TagDispatcherBuilder(Activity, OnDiscoveredTagListener)}. Depending on
+ * your preferences you can call the methods in the builder to change the
+ * default behavior.
+ * <p>
+ * To activate TagDispatcher after setting it up use the method
+ * {@link #enableExclusiveNfc()}. To disable TagDispatcher use the method
+ * {@link #disableExclusiveNfc()}.
+ * <p>
+ * For TagDispatcher to be able to handle tags on older Android versions
+ * (pre-KITKAT) need to call {@link #interceptIntent(Intent)} from onNewIntent.
+ * <p>
+ * You'll be notified about new tags through the OnDiscoveredTagListener
+ * interface that you provided when setting up TagDispatcher.
+ */
 public class TagDispatcher {
     private static final int DELAY_PRESENCE = 5000;
 
@@ -33,14 +56,14 @@ public class TagDispatcher {
        NOT_AVAILABLE
     }
 
-    private TagDispatcher(Activity activity,
-                          OnDiscoveredTagListener tagDiscoveredListener,
-                          boolean handleUnavailableNfc,
-                          boolean disableSounds,
-                          boolean dispatchOnUiThread,
-                          boolean broadcomWorkaround,
-                          boolean noReaderMode,
-                          boolean disableNdefCheck) {
+    TagDispatcher(Activity activity,
+                  OnDiscoveredTagListener tagDiscoveredListener,
+                  boolean handleUnavailableNfc,
+                  boolean disableSounds,
+                  boolean dispatchOnUiThread,
+                  boolean broadcomWorkaround,
+                  boolean noReaderMode,
+                  boolean disableNdefCheck) {
         this.activity = activity;
         this.tagDiscoveredListener = tagDiscoveredListener;
         this.handleUnavailableNfc = handleUnavailableNfc;
@@ -51,6 +74,22 @@ public class TagDispatcher {
         this.disableNdefCheck = disableNdefCheck;
     }
 
+    /**
+    * @deprecated  As of Nordpol 0.2, replaced by
+    *              {@link TagDispatcherBuilder}.
+    *              Will be removed in v0.3.0 or v1.0.0 (whichever comes first)
+    *
+    * @param activity               The Activity to attach the TagDispatcher to
+    * @param tagDiscoveredListener  The interface for getting new tags
+    * @param handleUnavailableNfc   If NFC is unavailable should Nordpol prompt
+    *                               the user?
+    * @param disableSounds          Should NFC interactions not produce sounds?
+    * @param dispatchOnUiThread     Should tags be dispatched on the UI thread?
+    * @param broadcomWorkaround     Should the Broadcom workaround be used?
+    * @param noReaderMode           Shouldn't ReaderMode be used?
+    * @param disableNdefCheck       Shouldn't NFC NDEF be checked?
+    * @return                       A new TagDispatcher
+    */
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc,
@@ -63,6 +102,21 @@ public class TagDispatcher {
                                  dispatchOnUiThread, broadcomWorkaround, noReaderMode, disableNdefCheck);
     }
 
+    /**
+    * @deprecated  As of Nordpol 0.2, replaced by
+    *              {@link TagDispatcherBuilder}.
+    *              Will be removed in v0.3.0 or v1.0.0 (whichever comes first)
+    *
+    * @param activity               The Activity to attach the TagDispatcher to
+    * @param tagDiscoveredListener  The interface for getting new tags
+    * @param handleUnavailableNfc   If NFC is unavailable should Nordpol prompt
+    *                               the user?
+    * @param disableSounds          Should NFC interactions not produce sounds?
+    * @param dispatchOnUiThread     Should tags be dispatched on the UI thread?
+    * @param broadcomWorkaround     Should the Broadcom workaround be used?
+    * @param noReaderMode           Shouldn't ReaderMode be used?
+    * @return                       A new TagDispatcher
+    */
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc,
@@ -74,6 +128,20 @@ public class TagDispatcher {
                                  dispatchOnUiThread, broadcomWorkaround, noReaderMode, false);
     }
 
+    /**
+    * @deprecated  As of Nordpol 0.2, replaced by
+    *              {@link TagDispatcherBuilder}.
+    *              Will be removed in v0.3.0 or v1.0.0 (whichever comes first)
+    *
+    * @param activity               The Activity to attach the TagDispatcher to
+    * @param tagDiscoveredListener  The interface for getting new tags
+    * @param handleUnavailableNfc   If NFC is unavailable should Nordpol prompt
+    *                               the user?
+    * @param disableSounds          Should NFC interactions not produce sounds?
+    * @param dispatchOnUiThread     Should tags be dispatched on the UI thread?
+    * @param broadcomWorkaround     Should the Broadcom workaround be used?
+    * @return                       A new TagDispatcher
+    */
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc,
@@ -84,6 +152,19 @@ public class TagDispatcher {
                                  dispatchOnUiThread, broadcomWorkaround, false, false);
     }
 
+    /**
+    * @deprecated  As of Nordpol 0.2, replaced by
+    *              {@link TagDispatcherBuilder}.
+    *              Will be removed in v0.3.0 or v1.0.0 (whichever comes first)
+    *
+    * @param activity               The Activity to attach the TagDispatcher to
+    * @param tagDiscoveredListener  The interface for getting new tags
+    * @param handleUnavailableNfc   If NFC is unavailable should Nordpol prompt
+    *                               the user?
+    * @param disableSounds          Should NFC interactions not produce sounds?
+    * @param dispatchOnUiThread     Should tags be dispatched on the UI thread?
+    * @return                       A new TagDispatcher
+    */
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc,
@@ -93,6 +174,18 @@ public class TagDispatcher {
                                  dispatchOnUiThread, true, false, false);
     }
 
+    /**
+    * @deprecated  As of Nordpol 0.2, replaced by
+    *              {@link TagDispatcherBuilder}.
+    *              Will be removed in v0.3.0 or v1.0.0 (whichever comes first)
+    *
+    * @param activity               The Activity to attach the TagDispatcher to
+    * @param tagDiscoveredListener  The interface for getting new tags
+    * @param handleUnavailableNfc   If NFC is unavailable should Nordpol prompt
+    *                               the user?
+    * @param disableSounds          Should NFC interactions not produce sounds?
+    * @return                       A new TagDispatcher
+    */
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc,
@@ -101,7 +194,17 @@ public class TagDispatcher {
                                  true, true, false, false);
     }
 
-
+    /**
+    * @deprecated  As of Nordpol 0.2, replaced by
+    *              {@link TagDispatcherBuilder}.
+    *              Will be removed in v0.3.0 or v1.0.0 (whichever comes first)
+    *
+    * @param activity               The Activity to attach the TagDispatcher to
+    * @param tagDiscoveredListener  The interface for getting new tags
+    * @param handleUnavailableNfc   If NFC is unavailable should Nordpol prompt
+    *                               the user?
+    * @return                       A new TagDispatcher
+    */
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener,
                                     boolean handleUnavailableNfc) {
@@ -109,6 +212,15 @@ public class TagDispatcher {
                                  true, true, false, false);
     }
 
+    /**
+    * @deprecated  As of Nordpol 0.2, replaced by
+    *              {@link TagDispatcherBuilder}.
+    *              Will be removed in v0.3.0 or v1.0.0 (whichever comes first)
+    *
+    * @param activity               The Activity to attach the TagDispatcher to
+    * @param tagDiscoveredListener  The interface for getting new tags
+    * @return                       A new TagDispatcher
+    */
     public static TagDispatcher get(Activity activity,
                                     OnDiscoveredTagListener tagDiscoveredListener) {
         return new TagDispatcher(activity, tagDiscoveredListener, true, false,
