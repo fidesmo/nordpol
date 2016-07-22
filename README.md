@@ -18,7 +18,7 @@ repositories {
 dependencies {
     ...
     //Nordpol
-    compile 'com.fidesmo:nordpol-android:0.1.15'
+    compile 'com.fidesmo:nordpol-android:0.1.19'
 }
 ```
 
@@ -58,7 +58,9 @@ Card. [The second one](https://developer.fidesmo.com/tutorials/android-totp)
 is slightly more advanced and shows how to interact with an
 [OTP device](https://github.com/Yubico/ykneo-oath).
 
-## Building
+## Building locally
+
+### Tools
 
 We use SBT for building. Get it
 [here](http://www.scala-sbt.org/download.html)
@@ -77,6 +79,40 @@ On Windows
 ```
 sdk.dir = Z:\\path\to\android\sdk
 ```
+
+### Building
+
+After cloning the Nordpol project open a terminal in the project folder and
+run the SBT command `sbt publishM2` This command will (locally) publish the
+library with the version declared in the version.sbt file in the project folder.
+
+Add `mavenLocal()` to the repository configuration section in your Android
+project `build.gradle` file, like so:
+```
+repositories {
+    /***
+     * Other repositories
+     **/
+    mavenLocal()
+}
+```
+
+Import the latest SNAPSHOT version of Nordpol (or whatever version name you gave
+your locally published the project). For example like this:
+```
+compile 'com.fidesmo:nordpol-android:0.1.20-SNAPSHOT'
+```
+
+Many operating systems run into caching issues when you try to publish a new
+version with the same name as the last version. The project might simply fetch
+the same version as the one it fetched before because the name didn't change.
+The current suggested workaround for this is changing the version name after
+each change.
+
+## Releasing
+
+If you have the right credentials all that is needed is running the SBT
+command `sbt release` and you'll be guided through the process.
 
 ## Contributions
 
