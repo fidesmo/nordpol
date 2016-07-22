@@ -10,14 +10,14 @@ import android.app.Activity;
  * the builder to change the default behavior.
  */
 public class TagDispatcherBuilder {
-    private Activity activity;
-    private OnDiscoveredTagListener tagDiscoveredListener;
-    private boolean enableUnavailableNfcUserPrompt;
-    private boolean enableSounds;
-    private boolean enableDispatchingOnUiThread;
-    private boolean enableBroadcomWorkaround;
-    private boolean enableReaderMode;
-    private boolean enableNdefCheck;
+    Activity activity;
+    OnDiscoveredTagListener tagDiscoveredListener;
+    boolean enableUnavailableNfcUserPrompt;
+    boolean enableSounds;
+    boolean enableDispatchingOnUiThread;
+    boolean enableBroadcomWorkaround;
+    boolean enableReaderMode;
+    boolean enableNdefCheck;
 
     /**
      * Constructor for TagDispatcherBuilder
@@ -152,13 +152,6 @@ public class TagDispatcherBuilder {
      * @return A new TagDispatcher
      */
     public TagDispatcher build() {
-      return new TagDispatcher (activity,
-                                tagDiscoveredListener,
-                                enableUnavailableNfcUserPrompt,
-                                enableSounds,
-                                enableDispatchingOnUiThread,
-                                enableBroadcomWorkaround,
-                                enableReaderMode,
-                                enableNdefCheck);
+        return new TagDispatcher (this);
     }
   }
