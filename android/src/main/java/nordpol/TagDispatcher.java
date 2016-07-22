@@ -56,6 +56,17 @@ public class TagDispatcher {
        NOT_AVAILABLE
     }
 
+    TagDispatcher(TagDispatcherBuilder tagDispatcherBuilder) {
+      this.activity = tagDispatcherBuilder.activity;
+      this.tagDiscoveredListener = tagDispatcherBuilder.tagDiscoveredListener;
+      this.handleUnavailableNfc = tagDispatcherBuilder.enableUnavailableNfcUserPrompt;
+      this.disableSounds = !tagDispatcherBuilder.enableSounds;
+      this.dispatchOnUiThread = tagDispatcherBuilder.enableDispatchingOnUiThread;
+      this.broadcomWorkaround = tagDispatcherBuilder.enableBroadcomWorkaround;
+      this.noReaderMode = !tagDispatcherBuilder.enableReaderMode;
+      this.disableNdefCheck = !tagDispatcherBuilder.enableNdefCheck;
+    }
+
     TagDispatcher(Activity activity,
                   OnDiscoveredTagListener tagDiscoveredListener,
                   boolean handleUnavailableNfc,
