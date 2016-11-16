@@ -23,13 +23,13 @@ public class Apdu {
      * @return the resulting hex string
      */
     public static String encodeHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
+        StringBuilder sb = new StringBuilder();
+
         for ( int i = 0; i < bytes.length; i++ ) {
-            int v = bytes[i] & 0xFF;
-            hexChars[i * 2] = hexArray[v >>> 4];
-            hexChars[i * 2 + 1] = hexArray[v & 0x0F];
+            sb.append(String.format("%02X", bytes[i] & 0xFF));
         }
-        return new String(hexChars);
+
+        return sb.toString();
     }
     /**
      * Encodes a byte into a hexadecimal string
