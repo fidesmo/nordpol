@@ -8,5 +8,6 @@
       <enum name="usb_black" value="2" />
       <enum name="usb_black_fidesmo" value="3" />
     </attr>
+    <attr name="transaction_item_icon" format="reference"/>
   </declare-styleable>
 </resources>

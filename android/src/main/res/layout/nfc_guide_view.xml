@@ -40,6 +40,17 @@
         android:layout_centerInParent="true"
         android:alpha="0"/>
 
+    <ImageView
+        android:id="@+id/nfc_guide_view_transaction_item_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/nfc_guide_view_cross"
+        android:layout_centerInParent="true"
+        android:rotation="-23"
+        android:alpha="0"
+        android:visibility="gone"
+        android:adjustViewBounds="true"/>
+
     <ProgressBar
         android:id="@+id/nfc_guide_view_progress_bar"
         style="?android:attr/progressBarStyleLarge"

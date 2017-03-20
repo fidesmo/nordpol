@@ -50,6 +50,7 @@ import nordpol.android.R;
  * nfcGuideView.setCurrentStatus(NfcGuideView.NfcGuideViewStatus.TRANSFERRING);
  */
 public class NfcGuideView extends RelativeLayout {
+    private static final float TRANSACTION_ITEM_ICON_X_OFFSET_DP = 25.0f;
     private int guideItemsStartDistance = 50;
     private static final int ANIMATION_DURATION_SHORT = 100;
     private static final int ANIMATION_DURATION_MEDIUM = 200;
@@ -57,8 +58,10 @@ public class NfcGuideView extends RelativeLayout {
     private static final int START_DELAY_LONG = 500;
 
     private int mNfcGuidePhoneWidth = 0;
+    private int nfcGuidePhoneHeight = 0;
     private int mNfcGuideHandWidth = 0;
     private int mRootViewWidth = 0;
+    private int mRootViewHeight = 0;
 
     private View mRootView;
     private ImageView mNfcGuidePhone;
@@ -66,6 +69,7 @@ public class NfcGuideView extends RelativeLayout {
     private ProgressBar mProgressBar;
     private ImageView mStatusPositive;
     private ImageView mStatusNegative;
+    private ImageView nfcGuideViewTransactionItemIcon;
 
     public enum NfcGuideViewStatus {
         STARTING_POSITION,
@@ -85,9 +89,11 @@ public class NfcGuideView extends RelativeLayout {
           0, 0);
 
         int nfcDeviceDesign = 0;
+        Drawable transactionItemIcon;
 
         try {
-          nfcDeviceDesign = typedArray.getInteger(R.styleable.NfcGuideView_nfc_device, 0);
+            nfcDeviceDesign = typedArray.getInteger(R.styleable.NfcGuideView_nfc_device, 0);
+            transactionItemIcon = typedArray.getDrawable(R.styleable.NfcGuideView_transaction_item_icon);
         } finally {
           typedArray.recycle();
         }
@@ -100,6 +106,7 @@ public class NfcGuideView extends RelativeLayout {
         mStatusNegative = (ImageView) mRootView.findViewById(R.id.nfc_guide_view_status_negative);
         mNfcGuidePhone = (ImageView) mRootView.findViewById(R.id.nfc_guide_view_phone);
         mNfcGuideHand = (ImageView) mRootView.findViewById(R.id.nfc_guide_view_hand);
+        nfcGuideViewTransactionItemIcon = (ImageView) mRootView.findViewById(R.id.nfc_guide_view_transaction_item_icon);
 
         switch(nfcDeviceDesign) {
         case 0:
@@ -116,6 +123,13 @@ public class NfcGuideView extends RelativeLayout {
             break;
         }
 
+        if (transactionItemIcon != null) {
+            nfcGuideViewTransactionItemIcon.setImageDrawable(transactionItemIcon);
+            nfcGuideViewTransactionItemIcon.setVisibility(View.VISIBLE);
+        } else {
+            nfcGuideViewTransactionItemIcon.setVisibility(View.GONE);
+        }
+
         mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @SuppressWarnings("deprecation")
             @Override
@@ -126,6 +140,7 @@ public class NfcGuideView extends RelativeLayout {
                     mRootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
                 mRootViewWidth = mRootView.getWidth();
+                mRootViewHeight = mRootView.getHeight();
                 nfcGuideStartPositions();
             }
         });
@@ -140,6 +155,7 @@ public class NfcGuideView extends RelativeLayout {
                     mNfcGuidePhone.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
                 mNfcGuidePhoneWidth = mNfcGuidePhone.getWidth();
+                nfcGuidePhoneHeight = mNfcGuidePhone.getHeight();
                 nfcGuideStartPositions();
             }
         });
@@ -180,6 +196,14 @@ public class NfcGuideView extends RelativeLayout {
             .x(getPhoneXStart())
             .alpha(1f)
             .setInterpolator(new AccelerateDecelerateInterpolator());
+
+        nfcGuideViewTransactionItemIcon
+                .animate()
+                .x(getTransactionItemIconXStart())
+                .alpha(1f)
+                .setInterpolator(new AccelerateDecelerateInterpolator());
+
+        nfcGuideViewTransactionItemIcon.setY(mRootViewHeight/7);
     }
 
     private int getHandXStart() {
@@ -188,6 +212,10 @@ public class NfcGuideView extends RelativeLayout {
 
     private int getPhoneXStart() {
         return Math.min(getViewCenter() - guideItemsStartDistance, mRootViewWidth - mNfcGuidePhoneWidth);
+    }
+
+    private int getTransactionItemIconXStart() {
+        return (int) (getPhoneXStart() + getPixelsFromDp(TRANSACTION_ITEM_ICON_X_OFFSET_DP));
     }
 
     private int getViewCenter(){
@@ -202,6 +230,10 @@ public class NfcGuideView extends RelativeLayout {
     private int getPhoneXTransferring() {
         int centerOffsetXPhone = guideItemsStartDistance + guideItemsStartDistance/2;
         return Math.min(getViewCenter() - centerOffsetXPhone, mRootViewWidth - mNfcGuidePhoneWidth);
+    }
+
+    private int getTransactionItemIconXTransferring() {
+        return (int) (getPhoneXTransferring() + getPixelsFromDp(TRANSACTION_ITEM_ICON_X_OFFSET_DP));
     }
 
     private void nfcGuideTransferring() {
@@ -227,6 +259,12 @@ public class NfcGuideView extends RelativeLayout {
             .x(getPhoneXTransferring())
             .alpha(1f)
             .setInterpolator(new AccelerateDecelerateInterpolator());
+
+        nfcGuideViewTransactionItemIcon
+                .animate()
+                .x(getTransactionItemIconXTransferring())
+                .alpha(1f)
+                .setInterpolator(new AccelerateDecelerateInterpolator());
     }
 
     private void nfcGuideDone() {
@@ -278,6 +316,13 @@ public class NfcGuideView extends RelativeLayout {
             .alpha(0f)
             .setInterpolator(new AccelerateInterpolator())
             .setDuration(ANIMATION_DURATION_MEDIUM);
+
+        nfcGuideViewTransactionItemIcon
+                .animate()
+                .x(phonePosition)
+                .alpha(0f)
+                .setInterpolator(new AccelerateInterpolator())
+                .setDuration(ANIMATION_DURATION_MEDIUM);
     }
 
     /**
@@ -302,6 +347,20 @@ public class NfcGuideView extends RelativeLayout {
         }
     }
 
+    /**
+     * Set the Drawable icon that is shown in in the transferring device graphic
+     *
+     * @param drawable The Drawable to be set
+     */
+    public void setTransactionItemIcon(Drawable drawable) {
+        if (drawable != null) {
+            nfcGuideViewTransactionItemIcon.setImageDrawable(drawable);
+            nfcGuideViewTransactionItemIcon.setVisibility(View.VISIBLE);
+        } else {
+            nfcGuideViewTransactionItemIcon.setVisibility(View.GONE);
+        }
+    }
+
     @SuppressWarnings("deprecation")
     private Drawable getResDrawable(int resourceId){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -309,5 +368,10 @@ public class NfcGuideView extends RelativeLayout {
         } else {
             return getResources().getDrawable(resourceId);
         }
+    }
+
+    private int getPixelsFromDp(float dp) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
     }
 }
