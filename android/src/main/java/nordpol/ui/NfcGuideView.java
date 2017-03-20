@@ -12,6 +12,8 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import nordpol.android.NfcDeviceDesign;
+import static nordpol.android.NfcDeviceDesign.getNfcDeviceDesign;
 
 import nordpol.android.R;
 
@@ -108,20 +110,7 @@ public class NfcGuideView extends RelativeLayout {
         mNfcGuideHand = (ImageView) mRootView.findViewById(R.id.nfc_guide_view_hand);
         nfcGuideViewTransactionItemIcon = (ImageView) mRootView.findViewById(R.id.nfc_guide_view_transaction_item_icon);
 
-        switch(nfcDeviceDesign) {
-        case 0:
-            mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_card_ruby));
-            break;
-        case 1:
-            mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_card_black));
-            break;
-        case 2:
-            mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_usb_black));
-            break;
-        case 3:
-            mNfcGuideHand.setImageDrawable(getResDrawable(R.drawable.nfc_guide_view_hand_holding_usb_black_fidesmo));
-            break;
-        }
+        setNfcDeviceDesign(getNfcDeviceDesign(nfcDeviceDesign));
 
         if (transactionItemIcon != null) {
             nfcGuideViewTransactionItemIcon.setImageDrawable(transactionItemIcon);
@@ -373,5 +362,28 @@ public class NfcGuideView extends RelativeLayout {
     private int getPixelsFromDp(float dp) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
+    }
+
+    /**
+     * Sets the NfcDeviceDesign that is shown
+     *
+     * @param nfcDeviceDesign
+     */
+    public void setNfcDeviceDesign(NfcDeviceDesign nfcDeviceDesign) {
+        mNfcGuideHand.setImageDrawable(getDeviceDrawable(nfcDeviceDesign));
+    }
+
+    private Drawable getDeviceDrawable(NfcDeviceDesign nfcDeviceDesign) {
+        switch(nfcDeviceDesign) {
+            case CARD_BLACK:
+                return getResDrawable(R.drawable.nfc_guide_view_hand_holding_card_black);
+            case USB_BLACK:
+                return getResDrawable(R.drawable.nfc_guide_view_hand_holding_usb_black);
+            case USB_BLACK_FIDESMO:
+                return getResDrawable(R.drawable.nfc_guide_view_hand_holding_usb_black_fidesmo);
+            case CARD_RUBY:
+            default:
+                return getResDrawable(R.drawable.nfc_guide_view_hand_holding_card_ruby);
+        }
     }
 }
