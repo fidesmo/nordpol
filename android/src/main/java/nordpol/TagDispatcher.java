@@ -339,7 +339,7 @@ public class TagDispatcher {
                     dispatchTag(tag);
                 }
             };
-        int flags = NfcAdapter.FLAG_READER_NFC_A;
+        int flags = NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_NFC_B;
         if(disableSounds) {
             flags = flags | NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
         }
