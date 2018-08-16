@@ -9,7 +9,7 @@ Communicating with NFC devices using Android can sometimes be a bit challenging.
 
 ## Usage
 
-[![Download](https://api.bintray.com/packages/fidesmo/maven/nordpol-android/images/download.svg)](https://bintray.com/fidesmo/maven/nordpol-android/_latestVersion)
+[![Download](https://api.bintray.com/packages/fidesmo/maven/nordpol-android/images/download.svg)](https://bintray.com/fidesmo/maven/nordpol-android/_latestVersion) [![Build Status](https://travis-ci.org/fidesmo/nordpol.svg?branch=master)](https://travis-ci.org/fidesmo/nordpol)
 
 To include Nordpol into your gradle Android build add these imports to your ```build.gradle```:
 ```
