@@ -2,13 +2,14 @@ language: android
 android:
   components:
     # The BuildTools version used by your project
-    - build-tools-23.0.2
+    - build-tools-27.0.3
 
     # The SDK version used to compile your project
-    - android-23
+    - android-27
 jdk:
-  - oraclejdk7
+  - oraclejdk8
 before_install:
+  - yes | sdkmanager "platforms;android-27"
   - echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
   - sudo apt-get update -qq
   - sudo apt-get install -qq -y --force-yes sbt
