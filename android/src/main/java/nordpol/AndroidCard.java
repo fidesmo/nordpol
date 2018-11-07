@@ -20,6 +20,7 @@ public class AndroidCard implements IsoCard {
 
     private AndroidCard(IsoDep card) {
         this.card = card;
+        card.setTimeout(DEFAULT_TIMEOUT);
     }
 
     public static AndroidCard get(Tag tag) throws IOException {
@@ -60,7 +61,6 @@ public class AndroidCard implements IsoCard {
     public void connect() throws IOException {
         try {
             card.connect();
-            card.setTimeout(DEFAULT_TIMEOUT);
         } catch(IOException e) {
             notifyListeners(e);
             throw e;
