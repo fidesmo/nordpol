@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
+import android.util.Log;
 
 import nordpol.IsoCard;
 import nordpol.OnCardErrorListener;
@@ -60,6 +61,7 @@ public class AndroidCard implements IsoCard {
     public void connect() throws IOException {
         try {
             card.connect();
+            Log.i("NFC", "Changing IsoDep timeout from " + card.getTimeout() + " to " + DEFAULT_TIMEOUT);
             card.setTimeout(DEFAULT_TIMEOUT);
         } catch(IOException e) {
             notifyListeners(e);
@@ -79,6 +81,7 @@ public class AndroidCard implements IsoCard {
     }
 
     public void setTimeout(int timeout) {
+        Log.i("NFC", "Changing IsoDep timeout from " + card.getTimeout() + " to " + timeout);
         card.setTimeout(timeout);
     }
 
