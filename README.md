@@ -1,5 +1,9 @@
 ![Nordpol icon](/nordpol_super_secret_nfc_project.png?raw=true)
-# Fidesmo Nordpol - The Android Support Library for NFC
+# [Deprecated] Fidesmo Nordpol - The Android Support Library for NFC
+
+## Deprecated
+Nordpol was created in 2015 when NFC on Android was still young and fragmented. The goal was to provide a unified interface regardless of the underlying Android version. As time passed workarounds for buggy chips, interface elements and much more were added as well. However, the chips that the workarounds were done for are no longer relevant and the old versions of Android that were easier to support with Nordpol are not used as widely anymore. As the main reason for creating Nordpol is no longer valid we've decided to shut down development of it. For anyone still using Nordpol we suggest migrating to the Android NFC API, starting with reading this page: https://developer.android.com/guide/topics/connectivity/nfc/advanced-nfc
+Thank you for the shown interest and see you in future projects!
 
 ## Goal of the project
 To make it as easy as possible to communicate with a NFC device using ISO 14443-4 commands. Specifically we are targeting devices that communicates using ISO 7816-4 APDUs.
